@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: sonarqube_cdy2203
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_FORCEAUTHENTICATION=false
+    networks:
+      - devops_net
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins_cdy2203
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      # Esto permite que Jenkins use Docker si es necesario
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - devops_net
+
+networks:
+  devops_net:
+    driver: bridge
+
+volumes:
+  jenkins_data:
